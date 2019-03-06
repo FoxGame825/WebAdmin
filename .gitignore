@@ -1,0 +1,5 @@
+server/*.txt
+p配置文件/~$Guide.xlsx
+server/.idea/
+server/bin/
+server/pkg/

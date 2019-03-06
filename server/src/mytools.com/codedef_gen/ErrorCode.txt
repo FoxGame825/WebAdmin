@@ -1,0 +1,8 @@
+﻿Code_StateOK = 200
+Code_Succ = 0   //操作成功
+Code_LoginFailed = 10001 //登录失败
+Code_ConMaxLimit = 10002 //并发上限
+Code_TokenInvalid = 10003 //token失效
+Code_ParamErr = 10004 //参数错误
+Code_ExecSqlFail = 10005 // 写入数据库失败
+

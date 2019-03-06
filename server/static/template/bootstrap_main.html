@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>武侠后台管理</title>
+
+    <!-- Bootstrap -->
+    <link href="/static/file/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/file/bootstrap-table-develop/dist/bootstrap-table.min.css" rel="stylesheet">
+
+
+    <!-- HTML5 shim 和 Respond.js 是为了让 IE8 支持 HTML5 元素和媒体查询（media queries）功能 -->
+    <!-- 警告：通过 file:// 协议（就是直接将 html 页面拖拽到浏览器中）访问页面时 Respond.js 不起作用 -->
+    <!--[if lt IE 9]>
+    <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+    <![endif]-->
+
+    <style>
+
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container" >
+
+
+    <div class="row">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h2 class="panel-title" id="user-info-name">fox</h2>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-3">
+                    <p id="user-info-permission">权限:增删改查</p>
+                </div>
+
+                <div class="col-md-7">
+
+                </div>
+                <div class="col-md-2">
+                    <div class="input-group-btn">
+                        <button class="btn btn-default" >设置</button>
+                        <button class="btn btn-default" onclick="LogoutClicked()">退出</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="row">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <ul id="result-info-panel">
+                    
+                </ul>
+            </div>
+
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-2 panel panel-primary">
+                        <br>
+                        <ul class="nav nav-pills nav-stacked nav-fill" id="left-nav-panel">
+                            <li data-toggle="tab"><a href="#detail-panel-1">玩家</a></li>
+                            <li data-toggle="tab"><a href="#detail-panel-6">物品</a></li>
+                            <li data-toggle="tab"><a href="#detail-panel-3">邮件</a></li>
+                            <li data-toggle="tab"><a href="#detail-panel-4">公告</a></li>
+                            <li data-toggle="tab"><a href="#detail-panel-7">渠道</a></li>
+                            <li ><hr></li>
+                            
+                            <li data-toggle="tab"><a href="#detail-panel-2">用户管理</a></li>
+                            <li data-toggle="tab"><a href="#detail-panel-5">日志</a></li>
+                        </ul>
+                        <br>
+                    </div>
+                    <div class="col-md-10">
+                        <div id="detail-panel-1" class="panel panel-primary">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">玩家管理面板</h3>
+                            </div>
+                            <div class="panel-body">
+                                <ul id="player-panel-tab" class="nav nav-tabs">
+                                    <li class="active"><a href="#query-player-p" data-toggle="tab">玩家查询</a></li>
+                                    <li><a href="#add-item-p" data-toggle="tab">增加物品</a></li>
+                                    <li><a href="#add-equip-p" data-toggle="tab">增加装备</a></li>
+                                    <li><a href="#add-res-p" data-toggle="tab">增加资源</a></li>
+                                    <li><a href="#seal-player-p" data-toggle="tab">封号</a></li>
+                                    
+                                </ul>
+                                <div id="player-panel-tab-content" class="tab-content">
+                                    <div class="tab-pane fade " id="add-item-p">
+                                        <form role="form" id="add-item-form">
+                                            <div class="form-group">
+                                                <label >玩家ID</label>
+                                                <input type="text" class="form-control" name="playerId" placeholder="请输入玩家id" onkeyup="this.value=this.value.replace(/\D/g,'')">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>物品ID</label>
+                                                <input type="text" class="form-control" name="itemId" placeholder="请输入物品id" onkeyup="this.value=this.value.replace(/\D/g,'')">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>数量</label>
+                                                <input type="text" class="form-control" name="count" placeholder="请输入物品数量" value="1" onkeyup="this.value=this.value.replace(/\D/g,'')">
+                                            </div>
+                                            <button type="button" class="btn btn-default" onclick="AddGoods(1,'add-item-form');return false">添加</button>
+                                        </form>
+                                        <div class="panel-default">
+                                            <h4>结果:</h4>
+                                            <p id="add-item-result">成功!</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="tab-pane fade" id="add-equip-p">
+                                        <form role="form" id="add-equip-form">
+                                            <div class="form-group">
+                                                <label >玩家ID</label>
+                                                <input type="text" class="form-control" name="playerId" placeholder="请输入玩家id" onkeyup="this.value=this.value.replace(/\D/g,'')">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>装备ID</label>
+                                                <input type="text" class="form-control" name="itemId" placeholder="请输入装备id" onkeyup="this.value=this.value.replace(/\D/g,'')">
+                                                <input type="text" class="form-control" name="count" value="1" style="display:none">
+                                            </div>
+                                            <button type="button" class="btn btn-default" onclick="AddGoods(2,'add-equip-form');return false">添加</button>
+                                        </form>
+                                        <div class="panel-default">
+                                            <h4>结果:</h4>
+                                            <p>成功!</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="tab-pane fade" id="add-res-p">
+                                        <div class="panel panel-success">
+                                            <div class="panel-heading">
+                                                <label class="panel-title">元宝</label>
+                                            </div>
+                                            <div class="panel-body">
+                                                <form role="form" id="add-res-yuanbao-form">
+                                                    <div class="form-group">
+                                                        <label >玩家ID:</label>
+                                                        <input type="text" class="form-control" name="playerID" placeholder="请输入玩家id" onkeyup="this.value=this.value.replace(/\D/g,'')">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label >元宝数量:</label>
+                                                        <input type="text" class="form-control" name="count" value="1" onkeyup="this.value=this.value.replace(/\D/g,'')">
+                                                    </div>
+                                                    <button class="btn btn-default" onclick="AddRes(1,'add-res-yuanbao-form') ;return false">添加</button>
+                                                </form>
+                                            </div>
+                                        </div>
+
+                                        <div class="panel panel-success">
+                                            <div class="panel-heading">
+                                                <label class="panel-title">银两</label>
+                                            </div>
+                                            <div class="panel-body">
+                                                <form role="form" id="add-res-yinliang-form">
+                                                    <div class="form-group">
+                                                        <label >玩家ID:</label>
+                                                        <input type="text" class="form-control" name="playerID" placeholder="请输入玩家id" onkeyup="this.value=this.value.replace(/\D/g,'')">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label > 银两数量:</label>
+                                                        <input type="text" class="form-control" name="count" value="1" onkeyup="this.value=this.value.replace(/\D/g,'')">
+                                                    </div>
+                                                    <button class="btn btn-default" onclick="AddRes(2,'add-res-yinliang-form') ;return false">添加</button>
+                                                </form>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+
+                                    <div class="tab-pane fade in active" id="query-player-p">
+                                        <table id="player-table">
+                                            </table>
+                                    </div>
+
+                                    <div class="tab-pane fade" id="seal-player-p">
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div id="detail-panel-2" class="panel panel-primary">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">后台用户管理面板</h3>
+                            </div>
+                            <div class="panel-body">
+                                <table id="user-table">
+                                </table>
+                            </div>
+                        </div>
+
+                        <div id="detail-panel-6" class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">物品查询面板</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <ul id="goods-panel-tab" class="nav nav-tabs">
+                                        <li class="active"><a href="#search-item-p" data-toggle="tab">道具</a></li>
+                                        <li><a href="#search-equip-p" data-toggle="tab">装备</a></li>
+                                    </ul>
+                                    <div id="goods-panel-tab-content" class="tab-content">
+                                        <div class="tab-pane fade in active" id="search-item-p">
+                                            <table id="item-table"></table>
+                                        </div>
+    
+                                        <div class="tab-pane fade" id="search-equip-p">
+                                            <table id="equip-table"></table>
+                                        </div>
+                                       
+                                    </div>
+    
+                                </div>
+                            </div>
+                       
+
+
+                        <div id="detail-panel-3" class="panel panel-primary" >
+                            <div class="panel-heading">
+                                <h3 class="panel-title">发送邮件面板</h3>
+                            </div>
+                            <div class="panel-body">
+                                <form role="form" id="send-mail-form">
+                                    <div class="form-group">
+                                        <label>邮件标题</label>
+                                        <input type="text" class="form-control" name="mailTitle">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>发送ID(勾选全部玩家无需填写)</label>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                全部玩家
+                                                <input type="checkbox" name="toAll" class="input form-control" value="1">
+                                            </span>
+                                            <input type="text" class="form-control" name="playerID" onkeyup="this.value=this.value.replace(/\D/g,'')">
+                                            
+                                        </div>
+                                        
+                                    </div>
+                                    
+
+                                    <div class="form-group">
+                                        <label>邮件内容</label>
+                                        <textarea class="form-control" rows="5" name="mailContent"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>附加奖励</label>
+                                        <div class="row">
+                                            <div class="col-lg-2">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">银两</span>
+                                                    <input type="text" class="form-control" name="silver" onkeyup="this.value=this.value.replace(/\D/g,'')">
+                                                </div>
+                                                <div class="input-group">
+                                                        <span class="input-group-addon">元宝</span>
+                                                        <input type="text" class="form-control" name="gold" onkeyup="this.value=this.value.replace(/\D/g,'')">
+                                                    </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    
+                                    
+                                </form>
+
+                                <div class="form-group">
+                                    <label>附加物品(eg:{物品id,类型,数量}...)</label>
+
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <label class="radio-inline">
+                                                <input type="radio" name="optionsRadiosinline" id="optionsRadios3" value="1" checked>道具
+                                            </label>
+                                            <label class="radio-inline">
+                                                <input type="radio" name="optionsRadiosinline" id="optionsRadios4"  value="2">装备
+                                            </label>
+
+                                                
+                                            <div class="input-group">
+                                                <span class="input-group-addon">ID</span>
+                                                <input type="text" class="form-control" id="reward-type-id" onkeyup="this.value=this.value.replace(/\D/g,'')">
+                                                <span class="input-group-addon">数量</span>
+                                                <input type="text" class="form-control" id="reward-count" onkeyup="this.value=this.value.replace(/\D/g,'')">
+
+                                                
+                                            </div>
+
+                                            <div class="input-group">
+                                                <input type="button" class="btn btn-default" value="添加" onclick="onClickedAddRewardItem()">
+                                                <input type="button" class="btn btn-default" value="清空" onclick="$('#reward-list-panel').empty()">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-12">
+                                            <ul class="list-group" id="reward-list-panel"></ul>
+                                        </div>
+                                    </div>
+                                  
+                                    <br>
+                                    
+                                </div>
+                                <button type="button" class="btn btn-default" onclick="SendMailSubmit();return false">发送邮件</button>
+
+
+                            </div>
+                        </div>
+
+                        <div id="detail-panel-4" class="panel panel-primary" >
+                            <div class="panel-heading">
+                                <h3 class="panel-title">发送公告面板</h3>
+                            </div>
+                            <div class="panel-body">
+                                <ul id="notice-panel-tab" class="nav nav-tabs">
+                                    <li class="active"><a href="#notice-list-p" data-toggle="tab">公告列表</a></li>
+                                    <li><a href="#add-notice-p" data-toggle="tab">发送公告</a></li>
+                                    <li><a href="#remove-notice-p" data-toggle="tab">删除公告</a></li>
+                                </ul>
+                                <div id="notice-panel-tab-content" class="tab-content">
+                                    <div class="tab-pane fade in active" id="notice-list-p">
+                                        <table id="notice-table"></table>
+                                    </div>
+
+                                    <div class="tab-pane fade" id="add-notice-p">
+                                            <form role="form" id="add-notice-form">
+                                                    <div class="form-group">
+                                                        <label>公告标题</label>
+                                                        <input type="text" class="form-control" name="noticeTitle">
+                                                    </div>
+                
+                                                    <div class="form-group">
+                                                        <label>公告内容</label>
+                                                        <textarea class="form-control" rows="5" name="noticeContent"></textarea>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>起始日期</label>
+                                                        <input type="datetime-local" class="form-control" name="startTime">
+                                                        <label>结束日期</label>
+                                                        <input type="datetime-local" class="form-control" name="endTime">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>渠道号</label>
+                                                        <input type="text" class="form-control" name="channelId" onkeyup="this.value=this.value.replace(/\D/g,'')">
+                                                    </div>
+
+                                                    <button type="button" class="btn btn-default" onclick="SendNoticeSubmit();return false">发送公告</button>
+                                                </form>
+                                    </div>
+
+                                    <div class="tab-pane fade" id="remove-notice-p">
+                                        <form role="form" id="remove-notice-form" >
+                                            <div class="form-group">
+                                                <label>公告ID</label>
+                                                <input type="text" class="form-control" name="noticeID" onkeyup="this.value=this.value.replace(/\D/g,'')">
+                                            </div>
+                                            <button class="btn btn-default" onclick="RemoveNoticeSubmit();return false">删除</button>
+                                        </form>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+
+                        
+                        <div id="detail-panel-7" class="panel panel-primary" >
+                            <div class="panel-heading">
+                                <h3 class="panel-title">渠道面板</h3>
+                            </div>
+                            <div class="panel-body">
+                                <ul id="channel-panel-tab" class="nav nav-tabs">
+                                    <li class="active"><a href="#channel-list-p" data-toggle="tab">渠道列表</a></li>
+                                    <li><a href="#add-channel-p" data-toggle="tab">新增渠道</a></li>
+                                    <li><a href="#remove-channel-p" data-toggle="tab">删除渠道</a></li>
+                                </ul>
+                                <div id="channel-panel-tab-content" class="tab-content">
+                                    <div class="tab-pane fade in active" id="channel-list-p">
+                                        <table id="channel-table"></table>
+                                    </div>
+
+                                    <div class="tab-pane fade" id="add-channel-p">
+                                            <form role="form" id="add-channel-form">
+                                                    <div class="form-group">
+                                                        <label>渠道名</label>
+                                                        <input type="text" class="form-control" name="channelName">
+                                                    </div>
+                
+                                                    <div class="form-group">
+                                                        <label>渠道描述</label>
+                                                        <textarea class="form-control" rows="5" name="channelDesc"></textarea>
+                                                    </div>
+                                                    <button type="button" class="btn btn-default" onclick="AddChannel();return false">添加</button>
+                                                </form>
+                                    </div>
+
+                                    <div class="tab-pane fade" id="remove-channel-p">
+                                        <form role="form" id="remove-channel-form" >
+                                            <div class="form-group">
+                                                <label>渠道ID</label>
+                                                <input type="text" class="form-control" name="channelID" onkeyup="this.value=this.value.replace(/\D/g,'')">
+                                            </div>
+                                            <button class="btn btn-default" onclick="DelChannel();return false">删除</button>
+                                        </form>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div id="detail-panel-5" class="panel panel-primary" >
+                            <div class="panel-heading">
+                                <h3 class="panel-title">用户日志面板</h3>
+                            </div>
+                            <div class="panel-body">
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+    <!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
+    <script src="/static/file/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+    <script src="/static/file/bootstrap-table-develop/dist/bootstrap-table.min.js"></script>
+    <script src="/static/file/bootstrap-table-develop/dist/bootstrap-table-locale-all.min.js"></script>
+    <script src="/static/file/js.cookie.js"></script>
+    <script src="/static/file/main.api.js"></script>
+
+    <script>
+
+    </script>
+
+</div>
+</body>
+</html>

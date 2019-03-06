@@ -1,0 +1,18 @@
+{
+  "mysql_url":"127.0.0.1:3306",
+  "mysql_username":"root",
+  "mysql_password":"",
+  "mysql_dbname":"wuxia_web_master",
+
+  "game_sql_url":"10.10.10.119:3306",
+  "game_sql_user_name":"wuxia",
+  "game_sql_password":"shinerjoy",
+  "game_sql_db_name":"wuxia",
+
+  "nsq_url":"10.10.10.119:14151",
+  "nsq_consumer_topic":"ToWeb",
+  "nsq_publish_topic":"FromWeb",
+  "nsq_channel":"ch1",
+
+  "web_port":8080
+}
