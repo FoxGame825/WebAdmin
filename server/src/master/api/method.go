@@ -4,8 +4,7 @@ import (
 		"master/define"
 		"fmt"
 	"time"
-	"master/utils/mydb"
-	"master/utils/mycfg"
+	"master/utils"
 )
 
 
@@ -14,7 +13,7 @@ const(
 )
 
 func CheckLoginInfo(user string,passwd string)bool{
-	db:=mydb.Instance().Db
+	db:=utils.GetDbMgr().Db
 	info :=&define.UserInfo{}
 	if err:=db.Model(define.UserInfo{}).Where("user_name=?",user).First(info).Error;err!=nil{
 		fmt.Println(err)
@@ -29,7 +28,7 @@ func CheckLoginInfo(user string,passwd string)bool{
 }
 
 func QueryUserInfo(id int)*define.UserInfo{
-	db:=mydb.Instance().Db
+	db:=utils.GetDbMgr().Db
 	info :=&define.UserInfo{}
 	if err:=db.Model(define.UserInfo{}).Where("id=?",id).First(info).Error;err!=nil{
 		fmt.Println(err)
@@ -40,7 +39,7 @@ func QueryUserInfo(id int)*define.UserInfo{
 
 func QueryAllUserInfo()[]define.UserInfo{
 	infos:=make([]define.UserInfo,0)
-	db:=mydb.Instance().Db
+	db:=utils.GetDbMgr().Db
 	if err:=db.Model(define.UserInfo{}).Find(&infos).Error;err!=nil{
 		fmt.Println(err)
 		return nil
@@ -50,8 +49,8 @@ func QueryAllUserInfo()[]define.UserInfo{
 
 func QueryAllPlayerInfo()[]define.PlayerInfo{
 	infos:=make([]define.PlayerInfo,0)
-	db:=mydb.Instance().GameDb
-	if err:=db.Table("players").Select("id,account_id, name,silver,diamond,lock_status").Scan(&infos).Error;err!=nil{
+	db:=utils.GetDbMgr().Db
+	if err:=db.Table("players").Select("id,account_id, name,gold,diamond").Scan(&infos).Error;err!=nil{
 		fmt.Println(err)
 		return nil
 	}
@@ -59,7 +58,7 @@ func QueryAllPlayerInfo()[]define.PlayerInfo{
 }
 
 func QueryUserInfoByName(user string)*define.UserInfo{
-	db:=mydb.Instance().Db
+	db:=utils.GetDbMgr().Db
 	info :=&define.UserInfo{}
 	if err:=db.Model(define.UserInfo{}).Where("user_name=?",user).First(info).Error;err!=nil{
 		fmt.Println(err)
@@ -69,7 +68,7 @@ func QueryUserInfoByName(user string)*define.UserInfo{
 }
 
 func QueryUserInfoByToken(token string)*define.UserInfo{
-	db:=mydb.Instance().Db
+	db:=utils.GetDbMgr().Db
 	var info = &define.TokenInfo{}
 	if err:=db.Model(define.TokenInfo{}).Where("token=?",token).First(info).Error;err!=nil{
 		fmt.Println(err)
@@ -80,7 +79,7 @@ func QueryUserInfoByToken(token string)*define.UserInfo{
 }
 
 func MotifyUserInfo(newInfo *define.UserInfo)bool{
-	db:=mydb.Instance().Db
+	db:=utils.GetDbMgr().Db
 	if err:=db.Model(define.UserInfo{}).Updates(newInfo).Error;err!=nil{
 		fmt.Println(err)
 		return false
@@ -90,7 +89,7 @@ func MotifyUserInfo(newInfo *define.UserInfo)bool{
 }
 
 func AddUserInfo(info *define.UserInfo)bool{
-	db:=mydb.Instance().Db
+	db:=utils.GetDbMgr().Db
 	if err:=db.Create(info).Error;err!=nil{
 		fmt.Println(err)
 		return false
@@ -99,7 +98,7 @@ func AddUserInfo(info *define.UserInfo)bool{
 }
 
 func GetToken(userid int)string{
-	db:=mydb.Instance().Db
+	db:=utils.GetDbMgr().Db
 	var info = &define.TokenInfo{}
 	if err:=db.Model(define.TokenInfo{}).Where("user_id=?",userid).First(info).Error;err!=nil{
 		fmt.Println(err)
@@ -110,7 +109,7 @@ func GetToken(userid int)string{
 
 func SetToken(userid int,token string,ip string)bool{
 	old:=GetToken(userid)
-	db:=mydb.Instance().Db
+	db:=utils.GetDbMgr().Db
 
 	if !CheckTokenValid(old){
 		if err:=db.Model(define.TokenInfo{}).Create(&define.TokenInfo{UserId:userid,Token:token,Ip:ip,ExpiredAt:time.Now().Add(Token_Expired)}).Error;err!=nil{
@@ -128,7 +127,7 @@ func SetToken(userid int,token string,ip string)bool{
 }
 
 func RefreshTokenExpired(token string)bool{
-	db:=mydb.Instance().Db
+	db:=utils.GetDbMgr().Db
 	if err:=db.Model(define.TokenInfo{}).Where("token=?",token).Update("expired_at",time.Now().Add(Token_Expired)).Error;err!=nil{
 		fmt.Println(err)
 		return false
@@ -138,7 +137,7 @@ func RefreshTokenExpired(token string)bool{
 }
 
 func ClearTokenByUserID(userid int)bool{
-	db:=mydb.Instance().Db
+	db:=utils.GetDbMgr().Db
 	if err:=db.Model(&define.TokenInfo{}).Where("user_id=?",userid).Delete(define.TokenInfo{}).Error;err!=nil{
 		fmt.Println(err)
 		return false
@@ -147,7 +146,7 @@ func ClearTokenByUserID(userid int)bool{
 }
 
 func ClearToken(token string)bool{
-	db:=mydb.Instance().Db
+	db:=utils.GetDbMgr().Db
 	if err:=db.Model(&define.TokenInfo{}).Where("token=?",token).Delete(define.TokenInfo{}).Error;err!=nil{
 		fmt.Println(err)
 		return false
@@ -160,7 +159,7 @@ func CheckTokenValid(token string)bool{
 		return false
 	}
 
-	db:=mydb.Instance().Db
+	db:=utils.GetDbMgr().Db
 	info:=&define.TokenInfo{}
 	if err:=db.Model(&define.TokenInfo{}).Where("token=?",token).First(info).Error;err!=nil{
 		fmt.Println(err)
@@ -176,7 +175,7 @@ func CheckPermission(curPermission int,checkPermission int)bool{
 }
 
 func PushLog(userid int,action string ,log string)bool{
-	db:=mydb.Instance().Db
+	db:=utils.GetDbMgr().Db
 	if err:=db.Create(&define.UserLogInfo{UserId:userid,Action:action,Log:log,CreatedAt:time.Now()}).Error;err!=nil{
 		fmt.Println(err)
 		return false
@@ -186,7 +185,7 @@ func PushLog(userid int,action string ,log string)bool{
 
 func GetLog(userid int)([]define.UserLogInfo){
 	infos:=make([]define.UserLogInfo,0)
-	db:=mydb.Instance().Db
+	db:=utils.GetDbMgr().Db
 	if err:=db.Model(define.UserLogInfo{}).Where("user_id = ?",userid).Find(&infos).Error;err!=nil{
 		fmt.Println(err)
 		return nil
@@ -197,12 +196,12 @@ func GetLog(userid int)([]define.UserLogInfo){
 
 func CheckGoodExist(cate ,typeID int)bool{
 	if cate == define.Good_Item_Type{
-		if mycfg.Instance().Data.ItemByID[int32(typeID)] ==nil{
+		if utils.GetCfgMgr().Data.ItemByID[int32(typeID)] ==nil{
 			return false
 		}
 
 	}else if cate ==define.Good_Equip_Type{
-		if mycfg.Instance().Data.EquipByID[int32(typeID)] ==nil{
+		if utils.GetCfgMgr().Data.EquipByID[int32(typeID)] ==nil{
 			return false
 		}
 	}
@@ -212,7 +211,7 @@ func CheckGoodExist(cate ,typeID int)bool{
 
 func QueryAllNoticeInfo()[]define.NoticeInfo{
 	infos:=make([]define.NoticeInfo,0)
-	db:=mydb.Instance().Db
+	db:=utils.GetDbMgr().Db
 	if err:=db.Model(define.NoticeInfo{}).Select("*").Scan(&infos).Error;err!=nil{
 		fmt.Println(err)
 		return nil
@@ -222,7 +221,7 @@ func QueryAllNoticeInfo()[]define.NoticeInfo{
 
 
 func AddNoticeInfo(title string,content string,channelId int,startTm,endTm time.Time)bool{
-	db:=mydb.Instance().Db
+	db:=utils.GetDbMgr().Db
 	if err:=db.Create(&define.NoticeInfo{Title:title,Content:content,ChannelId:channelId,StartTime:startTm,EndTime:endTm,CreatedAt:time.Now()}).Error;err!=nil{
 		fmt.Println(err)
 		return false
@@ -231,7 +230,7 @@ func AddNoticeInfo(title string,content string,channelId int,startTm,endTm time.
 }
 
 func DelNoticeInfo(id int)bool{
-	db:=mydb.Instance().Db
+	db:=utils.GetDbMgr().Db
 	if err:=db.Model(&define.NoticeInfo{}).Where("id=?",id).Delete(&define.NoticeInfo{}).Error;err!=nil{
 		fmt.Println(err)
 		return false
@@ -241,7 +240,7 @@ func DelNoticeInfo(id int)bool{
 
 
 func AddChannelInfo(name,desc string)bool{
-	db:=mydb.Instance().Db
+	db:=utils.GetDbMgr().Db
 	if err:=db.Create(&define.ChannelInfo{Name:name,Desc:desc,CreatedAt:time.Now()}).Error;err!=nil{
 		fmt.Println(err)
 		return false
@@ -250,7 +249,7 @@ func AddChannelInfo(name,desc string)bool{
 }
 
 func DelChannelInfo(id int)bool{
-	db:=mydb.Instance().Db
+	db:=utils.GetDbMgr().Db
 	if err:=db.Model(&define.ChannelInfo{}).Where("id=?",id).Delete(&define.ChannelInfo{}).Error;err!=nil{
 		fmt.Println(err)
 		return false
@@ -261,7 +260,7 @@ func DelChannelInfo(id int)bool{
 
 func QueryAllChannelInfo()[]define.ChannelInfo{
 	infos:=make([]define.ChannelInfo,0)
-	db:=mydb.Instance().Db
+	db:=utils.GetDbMgr().Db
 	if err:=db.Model(&define.ChannelInfo{}).Select("*").Scan(&infos).Error;err!=nil{
 		fmt.Println(err)
 		return nil

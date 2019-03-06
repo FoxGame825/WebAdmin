@@ -6,7 +6,7 @@ import (
 	"master/api"
 	"strconv"
 	"strings"
-	"master/utils/mynsq"
+		"master/utils"
 )
 
 func SendNoticeHander(ctx dotweb.Context)error{
@@ -28,11 +28,13 @@ func SendNoticeHander(ctx dotweb.Context)error{
 			userInfo:=api.QueryUserInfoByToken(token)
 			api.PushLog(userInfo.Id,define.Action_SendNotice,"title="+title +" content=" +info)
 
-			mynsq.Instance().PushResult(token,"添加公告成功!")
+			//mynsq.Instance().PushResult(token,"添加公告成功!")
+			utils.GetResultMgr().PushResult(token,"添加公告成功!")
 
 			return ctx.WriteJson(&define.ResponseData{Code:define.Code_Successed})
 		}else {
-			mynsq.Instance().PushResult(token,"添加公告失败")
+			//mynsq.Instance().PushResult(token,"添加公告失败")
+			utils.GetResultMgr().PushResult(token,"添加公告成功!")
 			return ctx.WriteJson(&define.ResponseData{Code:define.Code_AddNotice_Err})
 		}
 

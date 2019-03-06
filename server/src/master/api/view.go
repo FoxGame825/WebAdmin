@@ -7,8 +7,8 @@ import (
 
 
 func InitRoute(router dotweb.Router){
-	router.GET("/login", LoginViewHander).Use(CustomCROS())
-	router.GET("/main", MainViewHander).Use(CustomCROS())
+	router.GET("/login", LoginViewHander)//.Use(CustomCROS())
+	router.GET("/main", MainViewHander)//.Use(CustomCROS())
 }
 
 

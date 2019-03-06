@@ -6,13 +6,6 @@ import (
 	"master/api"
 )
 
-//
-//type userInfo struct {
-//	Name string `json:"name"`
-//	Avator string `json:"avator"`
-//	Roles []int	`json:"roles"`
-//}
-
 func GetUserInfoHander(ctx dotweb.Context)error{
 	defer ctx.End()
 

@@ -5,7 +5,7 @@ import (
 	"master/api"
 	"master/define"
 	"strconv"
-	"master/utils/mynsq"
+		"master/utils"
 )
 
 func DelChannelInfoHandler(ctx dotweb.Context)error{
@@ -20,7 +20,8 @@ func DelChannelInfoHandler(ctx dotweb.Context)error{
 		userInfo:=api.QueryUserInfoByToken(token)
 		api.PushLog(userInfo.Id,define.Action_DelChannel,"id="+ctx.FormValue("id"))
 
-		mynsq.Instance().PushResult(token,"删除渠道成功!")
+		//mynsq.Instance().PushResult(token,"删除渠道成功!")
+		utils.GetResultMgr().PushResult(token,"删除渠道成功!")
 
 		return ctx.WriteJson(&define.ResponseData{Code:define.Code_Successed})
 	}else {

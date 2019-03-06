@@ -27,8 +27,6 @@ $(document).ready(function () {
 
 
     GetUserInfo();
-
-
     LoadPlayerTable();
     LoadUserTable();
     LoadItemTable();
@@ -72,7 +70,6 @@ function LoadUserTable(){
             { field: 'id', title: '操作' ,formatter:'<a href="#">修改权限 </a><a href="#">修改密码</a>',align:'center' },
         ],
         responseHandler:function(res){
-            console.log("ParseUserTableData:",res)
             if(res.code == 0){
                 var temp =[]
                 var d = res.data
@@ -108,7 +105,6 @@ function LoadItemTable(){
             { field: 'desc', title: '描述' ,align:'center' },
         ],
         responseHandler:function(res){
-            console.log("ParseItemTableData:",res)
             if(res.code == 0){
                 var temp =[]
                 var data = res.data
@@ -144,7 +140,6 @@ function LoadEquipTable(){
             { field: 'desc', title: '描述' ,align:'center' },
         ],
         responseHandler:function(res){
-            console.log("ParseEquipTableData:",res)
             if(res.code == 0){
                 var temp =[]
                 var data = res.data
@@ -185,7 +180,6 @@ function LoadPlayerTable(){
         ],
         responseHandler:function(res){
             if (res ==null || res.code!=0 || res.data ==null) return []
-            console.log("ParsePlayerTableData:",res)
             if(res.code == 0){
                 var temp =[]
                 var data = res.data
@@ -227,7 +221,6 @@ function LoadNoticeTable(){
         ],
         responseHandler:function(res){
             if (res ==null || res.code!=0 || res.data ==null) return []
-            console.log("ParseNoticeTableData:",res)
             if(res.code == 0){
                 var temp =[]
                 var data = res.data
@@ -268,7 +261,6 @@ function LoadChannelTable(){
         ],
         responseHandler:function(res){
             if (res ==null || res.code!=0 || res.data ==null) return []
-            console.log("ParseChannelTableData:",res)
             if(res.code == 0){
                 var temp =[]
                 var data = res.data
@@ -297,12 +289,13 @@ function AddGoods(category,formname){
         type: "POST",
         data: subdata,
         beforeSend: function () {
-            //var fm = $("#add-item-form")
-            //console.log("/player/additem beforeSend")
             return true
         },
         success: function (res) {
-            $('#add-item-result').text(res.code.toString())
+            if (res.code !=0){
+                alert("error:"+res.code)
+            }
+            //$('#add-item-result').text(res.code.toString())
             //alert("结果:"+ res.code.toString())
         },
     });
@@ -317,13 +310,12 @@ function AddRes(currency,formname){
         type: "POST",
         data: subdata,
         beforeSend: function () {
-            //var fm = $("#add-item-form")
-            //console.log("/player/additem beforeSend")
             return true
         },
         success: function (res) {
-            //$('#add-item-result').text(res.code.toString())
-            console.log("结果:" + res.code.toString())
+            if (res.code !=0){
+                alert("error:"+res.code)
+            }
         },
     });
 }
@@ -358,13 +350,12 @@ function SendMailSubmit(){
         type: "POST",
         data: subdata,
         beforeSend: function () {
-            //var fm = $("#add-item-form")
-            //console.log("/player/additem beforeSend")
             return true
         },
         success: function (res) {
-            //$('#add-item-result').text(res.code.toString())
-            console.log("结果:" + res.code.toString())
+            if (res.code !=0){
+                alert("error:"+res.code)
+            }
         },
     });
 }
@@ -376,13 +367,12 @@ function SendNoticeSubmit() {
         type: "POST",
         data: $('#add-notice-form').serialize()+"&token="+GetToken(),
         beforeSend: function () {
-            //var fm = $("#add-item-form")
-            //console.log("/player/additem beforeSend")
             return true
         },
         success: function (res) {
-            //$('#add-item-result').text(res.code.toString())
-            console.log("结果:" + res.code.toString())
+            if (res.code !=0){
+                alert("error:"+res.code)
+            }
         },
     });
 }
@@ -394,13 +384,13 @@ function RemoveNoticeSubmit(){
         type: "POST",
         data: $('#remove-notice-form').serialize()+"&token="+GetToken(),
         beforeSend: function () {
-            //var fm = $("#add-item-form")
-            //console.log("/player/additem beforeSend")
+
             return true
         },
         success: function (res) {
-            //$('#add-item-result').text(res.code.toString())
-            console.log("结果:" + res.code.toString())
+            if (res.code !=0){
+                alert("error:"+res.code)
+            }
         },
     });
 }
@@ -412,13 +402,13 @@ function AddChannel(){
         type: "POST",
         data: $('#add-channel-form').serialize()+"&token="+GetToken(),
         beforeSend: function () {
-            //var fm = $("#add-item-form")
-            //console.log("/player/additem beforeSend")
+
             return true
         },
         success: function (res) {
-            //$('#add-item-result').text(res.code.toString())
-            console.log("结果:" + res.code.toString())
+            if (res.code !=0){
+                alert("error:"+res.code)
+            }
         },
     });
 }
@@ -430,13 +420,13 @@ function DelChannel(){
         type: "POST",
         data: $('#remove-channel-form').serialize()+"&token="+GetToken(),
         beforeSend: function () {
-            //var fm = $("#add-item-form")
-            //console.log("/player/additem beforeSend")
+
             return true
         },
         success: function (res) {
-            //$('#add-item-result').text(res.code.toString())
-            console.log("结果:" + res.code.toString())
+            if (res.code !=0){
+                alert("error:"+res.code)
+            }
         },
     });
 }
@@ -452,14 +442,12 @@ function hearthandler(){
         success:function(res){
             if (res.code!=0){
                 var bret = confirm("token expired ! please reload!");
-                Cookies.remove("token");
-                location.href = "/login";
+                toLogin();
             }
         },
         error:function (xhr) {
             var bret = confirm("heart error!");
-            Cookies.remove("token");
-            location.href = "/login";
+            toLogin();
         }
     });
 }
@@ -484,9 +472,13 @@ function resulthandler(){
 
 function LogoutClicked(){
     $.get("/user/logout",{"token":Cookies.get("token")},function (res) {
-        Cookies.remove("token");
-        location.href = "/login";
+        toLogin();
     })
+}
+
+function toLogin(){
+    Cookies.remove("token");
+    location.href = "/login";
 }
 
 

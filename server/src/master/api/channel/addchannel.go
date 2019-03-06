@@ -4,7 +4,7 @@ import (
 		"github.com/devfeel/dotweb"
 	"master/define"
 	"master/api"
-	"master/utils/mynsq"
+		"master/utils"
 )
 
 func AddChannelInfoHandler(ctx dotweb.Context)error{
@@ -20,7 +20,9 @@ func AddChannelInfoHandler(ctx dotweb.Context)error{
 		userInfo:=api.QueryUserInfoByToken(token)
 		api.PushLog(userInfo.Id,define.Action_AddChannel,"name="+name+" desc="+desc)
 
-		mynsq.Instance().PushResult(token,"添加渠道成功!")
+		//mynsq.Instance().PushResult(token,"添加渠道成功!")
+
+		utils.GetResultMgr().PushResult(token,"添加渠道成功!")
 
 		return ctx.WriteJson(&define.ResponseData{Code:define.Code_Successed})
 	}else {

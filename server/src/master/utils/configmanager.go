@@ -1,7 +1,7 @@
-package mycfg
+package utils
 
 import (
-	"master/utils/mycfg/cfg"
+	"master/utils/cfg"
 	"master/utils/mylog"
 )
 
@@ -9,13 +9,13 @@ type CfgMgr struct {
 	Data *cfg.DataConfigTable
 }
 
-var mIns *CfgMgr = nil
+var mCfgIns *CfgMgr = nil
 
-func Instance()*CfgMgr{
-	if mIns == nil{
-		mIns = &CfgMgr{}
+func GetCfgMgr()*CfgMgr{
+	if mCfgIns == nil{
+		mCfgIns = &CfgMgr{}
 	}
-	return mIns
+	return mCfgIns
 }
 
 func (this *CfgMgr)InitCfg(path string)bool{

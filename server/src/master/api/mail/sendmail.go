@@ -6,10 +6,10 @@ import (
 	"strconv"
 	"fmt"
 	"master/api"
-	"master/utils/mynsq/sspb"
-	"master/utils/mynsq"
-	"encoding/json"
+	//"master/utils/mynsq/sspb"
+		"encoding/json"
 	"master/utils/mylog"
+	"master/utils"
 )
 
 
@@ -23,8 +23,8 @@ func SendMailHander(ctx dotweb.Context)error{
 	itemListstr:=ctx.FormValue("rewardList")
 	allTag:=ctx.FormValue("toAll")
 	playerID,_:= strconv.Atoi(ctx.FormValue("playerID"))
-	silver,_:= strconv.Atoi(ctx.FormValue("silver"))
-	gold,_:= strconv.Atoi(ctx.FormValue("gold"))
+	//silver,_:= strconv.Atoi(ctx.FormValue("silver"))
+	//gold,_:= strconv.Atoi(ctx.FormValue("gold"))
 
 	fmt.Println("send mail to player : token=",token,"mailInfo=",mailInfo,"itemListstr=",itemListstr,"allTag=",allTag,"playerID=",playerID,"title=",title)
 
@@ -44,42 +44,45 @@ func SendMailHander(ctx dotweb.Context)error{
 		}
 
 
-		// nsq publish
-		msg:=&sspb.MS2CSendMailMsg{}
-		msg.Topic = title
-		msg.Content = mailInfo
-		msg.Silver = int32(silver)
-		msg.Diamond = int32(gold)
-		msg.SID = 3011
-		msg.Token = token
-		if allTag == "1"{
-			msg.IsSendAll = true
-			msg.PlayerID = 0
-		}else{
-			msg.PlayerID = int32(playerID)
-			msg.IsSendAll = false
-		}
+		//// nsq publish
+		//msg:=&sspb.MS2CSendMailMsg{}
+		//msg.Topic = title
+		//msg.Content = mailInfo
+		//msg.Silver = int32(silver)
+		//msg.Diamond = int32(gold)
+		//msg.SID = 3011
+		//msg.Token = token
+		//if allTag == "1"{
+		//	msg.IsSendAll = true
+		//	msg.PlayerID = 0
+		//}else{
+		//	msg.PlayerID = int32(playerID)
+		//	msg.IsSendAll = false
+		//}
+		//
+		//for _,v:=range items{
+		//	tp,_:= strconv.Atoi(v.Type)
+		//	cate,_:= strconv.Atoi(v.Cate)
+		//	num,_:= strconv.Atoi(v.Num)
+		//
+		//	if !api.CheckGoodExist(cate,tp){
+		//		return ctx.WriteJson(&define.ResponseData{Code:define.Code_Good_IsNot_Exist})
+		//	}
+		//	msg.ItemList = append(msg.ItemList,&sspb.MS2CSendMailMsg_ItemInfo{ItemTypeID:int32(tp),ItemCategory:int32(cate),Count:int32(num)})
+		//}
+		//mynsq.Instance().Publish( uint32(sspb.WebNsqTag_SendMail),msg)
 
-		for _,v:=range items{
-			tp,_:= strconv.Atoi(v.Type)
-			cate,_:= strconv.Atoi(v.Cate)
-			num,_:= strconv.Atoi(v.Num)
-
-			if !api.CheckGoodExist(cate,tp){
-				return ctx.WriteJson(&define.ResponseData{Code:define.Code_Good_IsNot_Exist})
-			}
-			msg.ItemList = append(msg.ItemList,&sspb.MS2CSendMailMsg_ItemInfo{ItemTypeID:int32(tp),ItemCategory:int32(cate),Count:int32(num)})
-		}
-		mynsq.Instance().Publish( uint32(sspb.WebNsqTag_SendMail),msg)
 
 
 		userInfo:=api.QueryUserInfoByToken(token)
-		api.PushLog(userInfo.Id,define.Action_SendMail,msg.String())
+		api.PushLog(userInfo.Id,define.Action_SendMail,ctx.Request().Form.Encode())
 
+		utils.GetResultMgr().PushResult(token,"发送邮件成功!")
 
 		return ctx.WriteJson(&define.ResponseData{Code:define.Code_Successed})
 
 	}else{
+		utils.GetResultMgr().PushResult(token,"发送邮件失败!")
 		return ctx.WriteJson(&define.ResponseData{Code:define.Code_TokenExpired})
 	}
 

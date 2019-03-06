@@ -1,4 +1,4 @@
-package mysetting
+package utils
 
 import (
 	"os"
@@ -25,16 +25,16 @@ type SettingMgr struct {
 	Web_Port int `json:"web_port"`
 }
 
-var mIns *SettingMgr =nil
+var mSettingIns *SettingMgr =nil
 
-func Instance()*SettingMgr{
-	if mIns == nil{
-		mIns = &SettingMgr{}
+func GetSettingMgr()*SettingMgr{
+	if mSettingIns == nil{
+		mSettingIns = &SettingMgr{}
 	}
-	return mIns
+	return mSettingIns
 }
 
-func (this *SettingMgr)InitCfg(path string)bool{
+func (this *SettingMgr)InitSetting(path string)bool{
 	fl,_:=os.Open(path)
 	defer fl.Close()
 

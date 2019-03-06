@@ -4,8 +4,8 @@ import (
 	"github.com/devfeel/dotweb"
 	"master/api"
 	"master/define"
-	"master/utils/mynsq"
-	"fmt"
+		"fmt"
+	"master/utils"
 )
 
 func GetResultHandler(ctx dotweb.Context)error{
@@ -13,7 +13,9 @@ func GetResultHandler(ctx dotweb.Context)error{
 
 	token:=ctx.FormValue("token")
 	if api.CheckTokenValid(token){
-		results:=mynsq.Instance().QueryNsqResult(token)
+		//results:=mynsq.Instance().QueryNsqResult(token)
+		results:=utils.GetResultMgr().PopResult(token)
+
 		if len(results)>0{
 			fmt.Println(results)
 		}

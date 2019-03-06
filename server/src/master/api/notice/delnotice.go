@@ -5,7 +5,7 @@ import (
 		"master/define"
 	"master/api"
 		"strconv"
-	"master/utils/mynsq"
+		"master/utils"
 )
 
 func DelNoticeHander(ctx dotweb.Context)error{
@@ -19,7 +19,8 @@ func DelNoticeHander(ctx dotweb.Context)error{
 
 		userInfo:=api.QueryUserInfoByToken(token)
 		api.PushLog(userInfo.Id,define.Action_DeleteNotice,"noticeID="+ctx.FormValue("noticeID"))
-		mynsq.Instance().PushResult(token,"删除公告成功!")
+		//mynsq.Instance().PushResult(token,"删除公告成功!")
+		utils.GetResultMgr().PushResult(token,"删除渠道成功!")
 		return ctx.WriteJson(&define.ResponseData{Code:define.Code_Successed})
 	}else {
 		return ctx.WriteJson(&define.ResponseData{Code:define.Code_TokenExpired})

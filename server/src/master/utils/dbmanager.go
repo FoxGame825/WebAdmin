@@ -1,4 +1,4 @@
-package mydb
+package utils
 
 import (
 	"github.com/jinzhu/gorm"
@@ -9,16 +9,16 @@ import (
 
 type DbMgr struct {
 	Db *gorm.DB
-	GameDb *gorm.DB
+	//GameDb *gorm.DB
 }
 
-var m_Ins *DbMgr = nil
+var mDbIns *DbMgr = nil
 
-func Instance()*DbMgr{
-	if m_Ins ==nil{
-		m_Ins = &DbMgr{}
+func GetDbMgr()*DbMgr{
+	if mDbIns ==nil{
+		mDbIns = &DbMgr{}
 	}
-	return m_Ins
+	return mDbIns
 }
 
 func (this *DbMgr)InitDB(source string)bool{
@@ -70,22 +70,22 @@ func (this *DbMgr)InitDB(source string)bool{
 
 	return true
 }
+//
+//func (this *DbMgr)InitGameDb(source string)bool{
+//	var err error
+//	this.GameDb, err = gorm.Open("mysql", source)
+//	if err != nil {
+//		panic(err)
+//		return false
+//	}
+//	this.GameDb.DB().SetMaxIdleConns(10)
+//	this.GameDb.DB().SetMaxOpenConns(100)
+//	return true
+//}
 
-func (this *DbMgr)InitGameDb(source string)bool{
-	var err error
-	this.GameDb, err = gorm.Open("mysql", source)
-	if err != nil {
-		panic(err)
-		return false
-	}
-	this.GameDb.DB().SetMaxIdleConns(10)
-	this.GameDb.DB().SetMaxOpenConns(100)
-	return true
-}
 
-
-func (this *DbMgr)Close(){
+func (this *DbMgr)DBClose(){
 	this.Db.Close()
-	this.GameDb.Close()
+	//this.GameDb.Close()
 }
 
