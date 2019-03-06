@@ -11,6 +11,20 @@ const(
 	Permission_Notice_OP = 1<<3		//发布删除公告权限
 	Permission_Motify_Permission = 1<<4	//修改用户权限
 )
+func PermissionString(per int)string{
+	if per == Permission_AddItem_OP{
+		return "给玩家添加物品,装备,银两,元宝权限"
+	}else if per == Permission_Mail_OP{
+		return "给玩家发送邮件权限"
+	}else if per == Permission_Query_User_OP{
+		return "查询玩家数据权限"
+	}else if per == Permission_Notice_OP{
+		return "发布删除公告权限"
+	}else if per == Permission_Motify_Permission{
+		return "修改用户权限"
+	}
+	return ""
+}
 
 const(
 	Action_Motify_Permission = "修改权限"	//修改权限操作

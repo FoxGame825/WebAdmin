@@ -2,24 +2,26 @@ package main
 
 
 import (
-		"github.com/devfeel/dotweb"
-		"master/api"
+									"path/filepath"
+			"strings"
+	"master/api"
 	"master/api/user"
 	"master/api/player"
 	"master/api/mail"
 	"master/api/notice"
-	"path/filepath"
-	"master/utils/mylog"
 	"master/api/goods"
-	"strings"
 	"master/api/channel"
 	"master/utils"
+	"master/utils/mylog"
+	"github.com/devfeel/dotweb"
 )
 
 
 func init(){
 	mylog.InitLogger(true)
 }
+
+
 
 func main() {
 	mylog.Info("\n\n\n\n\n-------------startup master-----------------")
