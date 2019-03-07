@@ -18,6 +18,9 @@ func AddChannelInfoHandler(ctx dotweb.Context)error{
 		api.AddChannelInfo(name,desc)
 
 		userInfo:=api.QueryUserInfoByToken(token)
+		if !api.CheckPermission(userInfo.Permission,define.Permission_Channel_OP){
+			return ctx.WriteJson(&define.ResponseData{Code:define.Code_NO_Permission})
+		}
 		api.PushLog(userInfo.Id,define.Action_AddChannel,"name="+name+" desc="+desc)
 
 		//mynsq.Instance().PushResult(token,"添加渠道成功!")

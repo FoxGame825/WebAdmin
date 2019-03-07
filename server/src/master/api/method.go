@@ -171,7 +171,7 @@ func CheckTokenValid(token string)bool{
 }
 
 func CheckPermission(curPermission int,checkPermission int)bool{
-	return curPermission & checkPermission > 0
+	return (curPermission & checkPermission) > 0
 }
 
 func PushLog(userid int,action string ,log string)bool{

@@ -19,10 +19,19 @@ func MotifyPermissionHandler(ctx dotweb.Context)error{
 		return ctx.WriteJson(&define.ResponseData{Code:1})
 	}
 
+
+
+
 	userInfo:=api.QueryUserInfoByToken(token)
 	if userInfo ==nil{
-		return ctx.WriteJson(&define.ResponseData{Code:2})
+		return ctx.WriteJson(&define.ResponseData{Code:define.Code_User_Not_Exist})
 	}
+
+	if !api.CheckPermission(userInfo.Permission,define.Permission_Motify_Permission_OP){
+		return ctx.WriteJson(&define.ResponseData{Code:define.Code_NO_Permission})
+	}
+
+
 	old:= userInfo.Permission
 	userInfo.Permission,_ = strconv.Atoi(motifyPermission)
 

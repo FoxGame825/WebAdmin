@@ -75,6 +75,10 @@ func SendMailHander(ctx dotweb.Context)error{
 
 
 		userInfo:=api.QueryUserInfoByToken(token)
+
+		if !api.CheckPermission(userInfo.Permission,define.Permission_Mail_OP){
+			return ctx.WriteJson(&define.ResponseData{Code:define.Code_NO_Permission})
+		}
 		api.PushLog(userInfo.Id,define.Action_SendMail,ctx.Request().Form.Encode())
 
 		utils.GetResultMgr().PushResult(token,"发送邮件成功!")

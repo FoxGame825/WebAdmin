@@ -31,6 +31,11 @@ func AddResHandler(ctx dotweb.Context)error{
 		//mynsq.Instance().Publish( uint32(sspb.WebNsqTag_AddRes),msg)
 
 		userInfo:=api.QueryUserInfoByToken(token)
+
+		if !api.CheckPermission(userInfo.Permission,define.Permission_AddItem_OP){
+			return ctx.WriteJson(&define.ResponseData{Code:define.Code_NO_Permission})
+		}
+
 		api.PushLog(userInfo.Id,define.Action_AddRes,ctx.Request().Form.Encode())
 
 		utils.GetResultMgr().PushResult(token,"添加资源成功!")

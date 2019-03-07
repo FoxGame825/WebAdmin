@@ -31,24 +31,35 @@
 <div class="container" >
 
     <div class="row">
-        <div class="panel panel-info">
+        <div class="panel panel-success">
             <div class="panel-heading">
-                <h2 class="panel-title" id="user-info-name">fox</h2>
+                <div class="row">
+                    <div class="col-md-2">
+                        <h2 class="panel-title" id="user-info-name">fox</h2>
+                    </div>
+                    <div class="col-md-8">
+
+                    </div>
+
+                    <div class="col-md-2">
+                        <button class="btn btn-default" onclick="LogoutClicked()">退出</button>
+                    </div>
+                </div>
+
             </div>
             <div class="panel-body">
                 <div class="col-md-3">
+                    <img class="img-circle image-responsive img-thumbnail" src="/static/file/head.png" alt="头像" width="80" height="80"/>
                     <p id="user-info-permission">权限:增删改查</p>
                 </div>
 
-                <div class="col-md-7">
+                <div class="col-md-3">
 
                 </div>
-                <div class="col-md-2">
-                    <div class="input-group-btn">
-                        <button class="btn btn-default" >设置</button>
-                        <button class="btn btn-default" onclick="LogoutClicked()">退出</button>
-                    </div>
+                <div class="col-md-6">
+                    <ul id="result-info-panel">
 
+                    </ul>
                 </div>
             </div>
         </div>
@@ -59,9 +70,7 @@
     <div class="row">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <ul id="result-info-panel">
-                    
-                </ul>
+
             </div>
 
             <div class="panel-body">

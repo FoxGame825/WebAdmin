@@ -39,11 +39,35 @@ $(document).ready(function () {
 function GetUserInfo(){
     $.get("/user/info",{token:GetToken()},function(res){
         if (res!=null && res.code ==0){
-            $("#user-info-name").text("欢迎登陆:"+res.data.username)
-            $("#user-info-permission").text("当前权限:" +res.data.permission)
+            $("#user-info-name").text("欢迎登陆: "+res.data.username)
+
+            per =res.data.permission
+            var perstr=""
+            if (CheckPermission(per,1<<0)){
+                perstr = perstr + "添加物品,资源权限/"
+            }
+            if (CheckPermission(per,1<<1)){
+                perstr = perstr + "发送邮件权限/"
+            }
+            if (CheckPermission(per,1<<2)){
+                perstr = perstr + "添加,删除公告权限/"
+            }
+            if (CheckPermission(per,1<<3)){
+                perstr = perstr + "修改其他用户权限/"
+            }
+            if (CheckPermission(per,1<<4)){
+                perstr = perstr + "渠道操作权限/"
+            }
+            $("#user-info-permission").text("当前权限:" +perstr)
+
         }
     });
 }
+
+function CheckPermission(cur,allow){
+    return (cur & allow) > 0
+}
+
 
 
 function LoadUserTable(){
@@ -74,7 +98,7 @@ function LoadUserTable(){
                 var temp =[]
                 var d = res.data
                 for(var i=0;i<d.length;i++){
-                    temp.push({"id":d[i].id,"username":d[i].username,"permission":d[i].permission,"created":d[i].created})
+                    temp.push({"id":d[i].id,"username":d[i].username,"permission":d[i].permission,"created":d[i].created_at})
                 }
                 return temp
             }
@@ -174,8 +198,8 @@ function LoadPlayerTable(){
         columns: [
             { field: 'id', title: 'ID' ,align:'center' },
             { field: 'name', title: '昵称' ,align:'center' },
-            { field: 'silver', title: '银两' ,align:'center' },
-            { field: 'diamond', title: '元宝' ,align:'center' },
+            { field: 'gold', title: '金币' ,align:'center' },
+            { field: 'diamond', title: '宝石' ,align:'center' },
             { field: 'lockstatus', title: '封号状态' ,align:'center' },
         ],
         responseHandler:function(res){
@@ -184,7 +208,7 @@ function LoadPlayerTable(){
                 var temp =[]
                 var data = res.data
                 for(var i=0;i<data.length;i++){
-                    temp.push({"id":data[i].id,"name":data[i].name,"silver":data[i].silver,"diamond":data[i].diamond,"lockstatus":data[i].lock_status})
+                    temp.push({"id":data[i].id,"name":data[i].name,"gold":data[i].gold,"diamond":data[i].diamond,"lockstatus":data[i].lock_status})
                 }
                 return temp
             }
@@ -293,7 +317,7 @@ function AddGoods(category,formname){
         },
         success: function (res) {
             if (res.code !=0){
-                alert("error:"+res.code)
+                showPopbox(res.code)
             }
             //$('#add-item-result').text(res.code.toString())
             //alert("结果:"+ res.code.toString())
@@ -314,7 +338,7 @@ function AddRes(currency,formname){
         },
         success: function (res) {
             if (res.code !=0){
-                alert("error:"+res.code)
+                showPopbox(res.code)
             }
         },
     });
@@ -354,7 +378,7 @@ function SendMailSubmit(){
         },
         success: function (res) {
             if (res.code !=0){
-                alert("error:"+res.code)
+                showPopbox(res.code)
             }
         },
     });
@@ -371,7 +395,7 @@ function SendNoticeSubmit() {
         },
         success: function (res) {
             if (res.code !=0){
-                alert("error:"+res.code)
+                showPopbox(res.code)
             }
         },
     });
@@ -389,7 +413,7 @@ function RemoveNoticeSubmit(){
         },
         success: function (res) {
             if (res.code !=0){
-                alert("error:"+res.code)
+                showPopbox(res.code)
             }
         },
     });
@@ -407,7 +431,7 @@ function AddChannel(){
         },
         success: function (res) {
             if (res.code !=0){
-                alert("error:"+res.code)
+                showPopbox(res.code)
             }
         },
     });
@@ -425,12 +449,26 @@ function DelChannel(){
         },
         success: function (res) {
             if (res.code !=0){
-                alert("error:"+res.code)
+                showPopbox(res.code)
             }
         },
     });
 }
 
+function showPopbox(code){
+    var msg =""
+    switch (code) {
+        case 1000:msg="token过期";break;
+        case 1001:msg="token无效";break;
+        case 2000:msg="protobuf序列化错误";break;
+        case 2001:msg="发送邮件参数序列化错误";break;
+        case 2003:msg="物品不存在";break;
+        case 2004:msg="添加公告失败";break;
+        case 2005:msg="权限不足";break;
+        case 2006:msg="用户不存在";break;
+    }
+    alert("error: " + msg)
+}
 
 
 function hearthandler(){

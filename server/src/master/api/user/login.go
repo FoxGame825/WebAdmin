@@ -50,5 +50,4 @@ func LoginHander(ctx dotweb.Context)error{
 		res.Msg = "username or password error!!"
 		return ctx.WriteJson(&define.ResponseData{Code:1,Data:res})
 	}
-
 }

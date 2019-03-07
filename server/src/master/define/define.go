@@ -7,23 +7,20 @@ import (
 const(
 	Permission_AddItem_OP = 1<<0	//给玩家添加物品,装备,银两,元宝权限
 	Permission_Mail_OP = 1<<1		//给玩家发送邮件权限
-	Permission_Query_User_OP = 1<<2	//查询玩家数据权限
-	Permission_Notice_OP = 1<<3		//发布删除公告权限
-	Permission_Motify_Permission = 1<<4	//修改用户权限
+	Permission_Notice_OP = 1<<2		//添加删除公告权限
+	Permission_Motify_Permission_OP = 1<<3	//修改其他用户权限
+	Permission_Channel_OP = 1<<4 //渠道操作权限
 )
 func PermissionString(per int)string{
-	if per == Permission_AddItem_OP{
-		return "给玩家添加物品,装备,银两,元宝权限"
-	}else if per == Permission_Mail_OP{
-		return "给玩家发送邮件权限"
-	}else if per == Permission_Query_User_OP{
-		return "查询玩家数据权限"
-	}else if per == Permission_Notice_OP{
-		return "发布删除公告权限"
-	}else if per == Permission_Motify_Permission{
-		return "修改用户权限"
+	switch per {
+	case Permission_AddItem_OP:return "给玩家添加物品,装备,银两,元宝权限"
+	case Permission_Mail_OP:return "给玩家发送邮件权限"
+	case Permission_Notice_OP:return "添加删除公告权限"
+	case Permission_Motify_Permission_OP:return "修改其他用户权限"
+	case Permission_Channel_OP:return "渠道操作权限"
+	default:
+		return ""
 	}
-	return ""
 }
 
 const(
@@ -37,6 +34,21 @@ const(
 	Action_AddChannel = "添加渠道"
 	Action_DelChannel = "删除渠道"
 )
+func ActionString(action string)string{
+	switch action {
+	case Action_Motify_Permission:return "修改权限"
+	case Action_AddItem:return "添加道具"
+	case Action_AddRes:return "添加资源"
+	case Action_SendMail:return "发送邮件"
+	case Action_SendNotice:return "添加公告"
+	case Action_DeleteNotice:return "删除公告"
+	case Action_Login:return "登录"
+	case Action_AddChannel:return "添加渠道"
+	case Action_DelChannel:return "删除渠道"
+	default:
+		return ""
+	}
+}
 
 const(
 	Code_Successed = 0
@@ -46,23 +58,29 @@ const(
 	Code_SendMail_Marshal_Err = 2001 //发送邮件参数序列化错误
 	Code_Good_IsNot_Exist = 2003 //物品不存在
 	Code_AddNotice_Err = 2004	//添加公告失败
-
+	Code_NO_Permission = 2005	//权限不足
+	Code_User_Not_Exist = 2006 //用户不存在
 )
+func CodeString(code int)string{
+	switch code {
+	case Code_Successed:return "成功"
+	case Code_TokenExpired:return "token过期"
+	case Code_TokenInValid:return "token无效"
+	case Code_Protobuf_Marshal_Err:return "protobuf 序列化错误"
+	case Code_SendMail_Marshal_Err:return "发送邮件参数序列化错误"
+	case Code_Good_IsNot_Exist:return "物品不存在"
+	case Code_AddNotice_Err:return "添加公告失败"
+	case Code_NO_Permission:return "权限不足"
+	case Code_User_Not_Exist:return "用户不存在"
+	default:
+		return ""
+	}
+}
 
 const(
 	Good_Item_Type = 1
 	Good_Equip_Type = 2
-	Good_Furniture_Type = 3
-
-
 )
-
-const(
-	Res_Gold_Type = 1
-	Res_Silver_Type = 2
-	Res_GongXun_Type = 3
-)
-
 
 type UserInfo struct {
 	Id int	`json:"id" form:"id" gorm:"primary_key;AUTO_INCREMENT"`
@@ -117,7 +135,7 @@ type PlayerInfo struct {
 	Id int `json:"id"`
 	AccountId int `json:"account_id"`
 	Name string `json:"name"`
-	Silver int64 `json:"silver"`
+	Gold int64 `json:"gold"`
 	Diamond int64 `json:"diamond"`
 	LockStatus int `json:"lock_status"`
 }

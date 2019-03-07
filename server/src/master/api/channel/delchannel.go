@@ -18,6 +18,9 @@ func DelChannelInfoHandler(ctx dotweb.Context)error{
 		api.DelChannelInfo(id)
 
 		userInfo:=api.QueryUserInfoByToken(token)
+		if !api.CheckPermission(userInfo.Permission,define.Permission_Channel_OP){
+			return ctx.WriteJson(&define.ResponseData{Code:define.Code_NO_Permission})
+		}
 		api.PushLog(userInfo.Id,define.Action_DelChannel,"id="+ctx.FormValue("id"))
 
 		//mynsq.Instance().PushResult(token,"删除渠道成功!")

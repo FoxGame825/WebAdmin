@@ -23,6 +23,11 @@ func AddItemHander(ctx dotweb.Context)error{
 		//check data valid
 
 		userInfo:=api.QueryUserInfoByToken(token)
+
+		if !api.CheckPermission(userInfo.Permission,define.Permission_AddItem_OP){
+			return ctx.WriteJson(&define.ResponseData{Code:define.Code_NO_Permission})
+		}
+
 		api.PushLog(userInfo.Id,define.Action_AddItem,ctx.Request().Form.Encode())
 
 		utils.GetResultMgr().PushResult(token,"添加物品成功!")

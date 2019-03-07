@@ -26,6 +26,9 @@ func SendNoticeHander(ctx dotweb.Context)error{
 		if api.AddNoticeInfo(title,info,channel,api.StringToTime(startTm),api.StringToTime(endTm)){
 
 			userInfo:=api.QueryUserInfoByToken(token)
+			if !api.CheckPermission(userInfo.Permission,define.Permission_Notice_OP){
+				return ctx.WriteJson(&define.ResponseData{Code:define.Code_NO_Permission})
+			}
 			api.PushLog(userInfo.Id,define.Action_SendNotice,"title="+title +" content=" +info)
 
 			//mynsq.Instance().PushResult(token,"添加公告成功!")

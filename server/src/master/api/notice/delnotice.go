@@ -18,6 +18,11 @@ func DelNoticeHander(ctx dotweb.Context)error{
 		api.DelNoticeInfo(id)
 
 		userInfo:=api.QueryUserInfoByToken(token)
+
+		if !api.CheckPermission(userInfo.Permission,define.Permission_Notice_OP){
+			return ctx.WriteJson(&define.ResponseData{Code:define.Code_NO_Permission})
+		}
+
 		api.PushLog(userInfo.Id,define.Action_DeleteNotice,"noticeID="+ctx.FormValue("noticeID"))
 		//mynsq.Instance().PushResult(token,"删除公告成功!")
 		utils.GetResultMgr().PushResult(token,"删除渠道成功!")
